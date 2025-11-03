@@ -4,6 +4,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
+import NotFoundPage from "./pages/NotFoundPage"; // ✅ import หน้า 404
 
 export default function App() {
   return (
@@ -22,6 +23,9 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* ✅ หน้า 404 ต้องอยู่ล่างสุดเสมอ */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

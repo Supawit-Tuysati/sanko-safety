@@ -1,42 +1,48 @@
 import {
   HomeIcon,
-  DocumentTextIcon,
+  PlusCircleIcon,
+  UserPlusIcon,
+  ClipboardDocumentCheckIcon,
   Cog6ToothIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  BuildingOfficeIcon,
-  FolderOpenIcon,
+  DocumentTextIcon,
+  MapIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar({ isOpen }) {
   const [width, setWidth] = useState("16rem");
+  const location = useLocation();
 
   useEffect(() => {
     setWidth(isOpen ? "16rem" : "4.5rem");
   }, [isOpen]);
 
+  // 🧭 เมนูหลัก พร้อม path สำหรับ navigation
   const sections = [
     {
       label: "ทั่วไป",
+      items: [{ icon: HomeIcon, label: "Dashboard", path: "/" }],
+    },
+    {
+      label: "การจัดการข้อมูล",
       items: [
-        { icon: HomeIcon, label: "Dashboard" },
-        { icon: ChartBarIcon, label: "รายงานสรุป" },
+        { icon: PlusCircleIcon, label: "เพิ่มถังดับเพลิง", path: "/add-extinguisher" },
+        { icon: UserPlusIcon, label: "เพิ่มผู้ใช้งาน", path: "/add-user" },
       ],
     },
     {
-      label: "การจัดการ",
+      label: "การตรวจเช็ก",
       items: [
-        { icon: UserGroupIcon, label: "ลูกค้า" },
-        { icon: BuildingOfficeIcon, label: "โครงการ" },
-        { icon: FolderOpenIcon, label: "เอกสาร" },
+        { icon: ClipboardDocumentCheckIcon, label: "ตรวจเช็กประจำเดือน", path: "/monthly-check" },
+        { icon: MapIcon, label: "แผนผังโรงงาน", path: "/factory-map" },
       ],
     },
     {
       label: "ระบบ",
       items: [
-        { icon: DocumentTextIcon, label: "Logs" },
-        { icon: Cog6ToothIcon, label: "ตั้งค่า" },
+        { icon: DocumentTextIcon, label: "Logs", path: "/logs" },
+        { icon: Cog6ToothIcon, label: "ตั้งค่า", path: "/settings" },
       ],
     },
   ];
@@ -53,6 +59,7 @@ export default function Sidebar({ isOpen }) {
       <ul className="space-y-2 p-4 flex-1 overflow-y-auto">
         {sections.map((section, sIdx) => (
           <div key={sIdx}>
+            {/* Label หมวดหมู่ */}
             {isOpen && (
               <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">
                 {section.label}
@@ -61,22 +68,34 @@ export default function Sidebar({ isOpen }) {
 
             {section.items.map((item, idx) => {
               const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+
               return (
-                <li
-                  key={idx}
-                  className="flex items-center gap-3 p-2 hover:bg-blue-100 rounded cursor-pointer transition"
-                >
-                  <Icon className="h-6 w-6 text-gray-700 flex-shrink-0" />
-                  <span
-                    className={`text-gray-800 font-medium whitespace-nowrap transition-all duration-300 ${
-                      isOpen
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-4"
+                <Link key={idx} to={item.path}>
+                  <li
+                    className={`flex items-center gap-3 p-2 rounded cursor-pointer transition
+                    ${
+                      isActive
+                        ? "bg-blue-100 text-blue-700 font-semibold"
+                        : "hover:bg-blue-50 text-gray-800"
                     }`}
                   >
-                    {item.label}
-                  </span>
-                </li>
+                    <Icon
+                      className={`h-6 w-6 flex-shrink-0 ${
+                        isActive ? "text-blue-600" : "text-gray-700"
+                      }`}
+                    />
+                    <span
+                      className={`whitespace-nowrap transition-all duration-300 ${
+                        isOpen
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 -translate-x-4"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </li>
+                </Link>
               );
             })}
           </div>
