@@ -1,30 +1,32 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
-import NotFoundPage from "./pages/NotFoundPage"; // ✅ import หน้า 404
+import NotFoundPage from "./pages/NotFoundPage";
+import DashboardPage from "./pages/DashboardPage";
+import ExtinguisherPage from "./pages/ExtinguisherPage";
 
 export default function App() {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Protected route */}
+      {/* Protected routes (ทั้งหมดอยู่ใต้ ProtectedRoute + MainLayout) */}
       <Route
-        path="/"
         element={
           <ProtectedRoute>
-            <MainLayout>
-              <DashboardPage />
-            </MainLayout>
+            <MainLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<DashboardPage />} /> {/* path="/" */}
+        <Route path="extinguisher" element={<ExtinguisherPage />} />
+      </Route>
 
-      {/* ✅ หน้า 404 ต้องอยู่ล่างสุดเสมอ */}
+      {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -24,18 +24,19 @@ export default function Sidebar({ isOpen }) {
       label: "ทั่วไป",
       items: [{ icon: HomeIcon, label: "Dashboard", path: "/" }],
     },
-    {
-      label: "การจัดการข้อมูล",
-      items: [
-        { icon: PlusCircleIcon, label: "เพิ่มถังดับเพลิง", path: "/add-extinguisher" },
-        { icon: UserPlusIcon, label: "เพิ่มผู้ใช้งาน", path: "/add-user" },
-      ],
-    },
+
     {
       label: "การตรวจเช็ก",
       items: [
         { icon: ClipboardDocumentCheckIcon, label: "ตรวจเช็กประจำเดือน", path: "/monthly-check" },
         { icon: MapIcon, label: "แผนผังโรงงาน", path: "/factory-map" },
+      ],
+    },
+    {
+      label: "การจัดการข้อมูล",
+      items: [
+        { icon: PlusCircleIcon, label: "เพิ่มถังดับเพลิง", path: "/extinguisher" },
+        { icon: UserPlusIcon, label: "เพิ่มผู้ใช้งาน", path: "/users" },
       ],
     },
     {
@@ -61,9 +62,7 @@ export default function Sidebar({ isOpen }) {
           <div key={sIdx}>
             {/* Label หมวดหมู่ */}
             {isOpen && (
-              <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">
-                {section.label}
-              </div>
+              <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">{section.label}</div>
             )}
 
             {section.items.map((item, idx) => {
@@ -74,22 +73,12 @@ export default function Sidebar({ isOpen }) {
                 <Link key={idx} to={item.path}>
                   <li
                     className={`flex items-center gap-3 p-2 rounded cursor-pointer transition
-                    ${
-                      isActive
-                        ? "bg-blue-100 text-blue-700 font-semibold"
-                        : "hover:bg-blue-50 text-gray-800"
-                    }`}
+                    ${isActive ? "bg-blue-100 text-blue-700 font-semibold" : "hover:bg-blue-50 text-gray-800"}`}
                   >
-                    <Icon
-                      className={`h-6 w-6 flex-shrink-0 ${
-                        isActive ? "text-blue-600" : "text-gray-700"
-                      }`}
-                    />
+                    <Icon className={`h-6 w-6 flex-shrink-0 ${isActive ? "text-blue-600" : "text-gray-700"}`} />
                     <span
                       className={`whitespace-nowrap transition-all duration-300 ${
-                        isOpen
-                          ? "opacity-100 translate-x-0"
-                          : "opacity-0 -translate-x-4"
+                        isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
                       }`}
                     >
                       {item.label}
