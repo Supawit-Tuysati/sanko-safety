@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { PlusIcon, FireIcon, XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import Select from "react-select";
 
 export default function ExtinguisherListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [extinguishers, setExtinguishers] = useState([
-    { id: 1, code: "FX-001", type: "CO₂", location: "อาคารสำนักงาน ชั้น 1", status: "ปกติ" },
-    { id: 2, code: "FX-002", type: "Dry Chemical", location: "คลังสินค้า A", status: "รอตรวจ" },
-    { id: 3, code: "FX-003", type: "Foam", location: "โรงงานผลิต", status: "หมดอายุ" },
+    { id: 1, type: "Co2", location: "อาคารสำนักงาน ชั้น 1", status: "ปกติ" },
+    { id: 2, type: "Dry Chemical", location: "คลังสินค้า A", status: "รอตรวจ" },
+    { id: 3, type: "Foam", location: "โรงงานผลิต", status: "หมดอายุ" },
   ]);
 
   const [formData, setFormData] = useState({
-    code: "",
     type: "",
     size: "",
     image: null,
@@ -18,6 +18,20 @@ export default function ExtinguisherListPage() {
     responsible: "",
     properties: "",
   });
+
+  const extinguisherOptions = [
+    { value: "1", label: "Dry Chemical" },
+    { value: "2", label: "Co2" },
+    { value: "3", label: "Foam" },
+    { value: "4", label: "Halotron" },
+  ];
+
+  const userOptions = [
+    { value: "สมชาย", label: "สมชาย" },
+    { value: "สมหญิง", label: "สมหญิง" },
+    { value: "ประเสริฐ", label: "ประเสริฐ" },
+    { value: "อารีย์", label: "อารีย์" },
+  ];
 
   const handleAdd = (e) => {
     e.preventDefault();
@@ -28,7 +42,6 @@ export default function ExtinguisherListPage() {
     };
     setExtinguishers([...extinguishers, newItem]);
     setFormData({
-      code: "",
       type: "",
       size: "",
       image: null,
@@ -38,6 +51,20 @@ export default function ExtinguisherListPage() {
     });
     setIsModalOpen(false);
   };
+
+  const openModal = () => {
+  setFormData({
+    type: "",
+    size: "",
+    image: null,
+    location: "",
+    responsible: "",
+    properties: "",
+  });
+  setIsModalOpen(true);
+};
+
+  
 
   return (
     <div>
@@ -49,7 +76,7 @@ export default function ExtinguisherListPage() {
         </h1>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={openModal}
           className="flex items-center gap-2 bg-blue-800 hover:bg-blue-900 text-white px-3 py-2 rounded shadow transition"
         >
           <PlusIcon className="h-5 w-5 text-white" />
@@ -62,7 +89,6 @@ export default function ExtinguisherListPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-100 text-gray-600 uppercase text-sm">
-              <th className="p-3 border-b">รหัสถัง</th>
               <th className="p-3 border-b">ประเภท</th>
               <th className="p-3 border-b">สถานที่ตั้ง</th>
               <th className="p-3 border-b">สถานะ</th>
@@ -71,7 +97,6 @@ export default function ExtinguisherListPage() {
           <tbody>
             {extinguishers.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50 transition border-b text-gray-700">
-                <td className="p-3">{item.code}</td>
                 <td className="p-3">{item.type}</td>
                 <td className="p-3">{item.location}</td>
                 <td className="p-3">
@@ -135,38 +160,51 @@ export default function ExtinguisherListPage() {
                   }
                 `}
               >
-                {/* รหัสถัง */}
+                {/* ประเภท */}
                 <div className="form-group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    รหัสถัง <span className="text-red-500">*</span>
+                    ชนิดถังดับเพลิง <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    options={extinguisherOptions}
+                    value={extinguisherOptions.find((opt) => opt.value === formData.type)}
+                    onChange={(selected) => setFormData({ ...formData, type: selected?.value || "" })}
+                    placeholder="-- เลือกประเภท --"
+                    isClearable
+                    className="w-full text-sm"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor: state.isFocused ? "#3b82f6" : "#d1d5db", // focus = blue-500
+                        boxShadow: state.isFocused ? "0 0 0 2px #3b82f6" : "none", // เส้นขอบหนา
+                        "&:hover": { borderColor: state.isFocused ? "#3b82f6" : "#1e40af" },
+                        borderRadius: "0.5rem",
+                        padding: "2px",
+                        transition: "all 0.15s ease",
+                      }),
+                      option: (base, state) => ({
+                        ...base,
+                        backgroundColor: state.isSelected ? "#1e40af" : state.isFocused ? "#eff6ff" : "white",
+                        color: state.isSelected ? "white" : "#111827",
+                        cursor: "pointer",
+                      }),
+                    }}
+                  />
+                </div>
+
+                {/* จุดติดตั้ง */}
+                <div className="form-group">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    จุดติดตั้ง <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                    value={formData.code}
-                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                    placeholder="เช่น EXT-001"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="เช่น ห้องประชุม ชั้น 2"
                     required
                   />
-                </div>
-
-                {/* ประเภท */}
-                <div className="form-group">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    ประเภทถังดับเพลิง <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-white"
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    required
-                  >
-                    <option value="">-- เลือกประเภท --</option>
-                    <option value="Dry Chemical">Dry Chemical</option>
-                    <option value="CO2">CO₂</option>
-                    <option value="Foam">Foam</option>
-                    <option value="Halotron">Halotron</option>
-                  </select>
                 </div>
 
                 {/* ขนาด */}
@@ -236,38 +274,38 @@ export default function ExtinguisherListPage() {
                   </div>
                 </div>
 
-                {/* จุดติดตั้ง */}
-                <div className="form-group">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    จุดติดตั้ง <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="เช่น ชั้น 2 ห้องประชุม A"
-                    required
-                  />
-                </div>
-
                 {/* ผู้รับผิดชอบ */}
                 <div className="form-group">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     ผู้รับผิดชอบ <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-white"
-                    value={formData.responsible}
-                    onChange={(e) => setFormData({ ...formData, responsible: e.target.value })}
-                    required
-                  >
-                    <option value="">-- เลือกผู้รับผิดชอบ --</option>
-                    <option value="สมชาย">สมชาย</option>
-                    <option value="สมหญิง">สมหญิง</option>
-                    <option value="ประเสริฐ">ประเสริฐ</option>
-                    <option value="อารีย์">อารีย์</option>
-                  </select>
+                  <Select
+                    options={userOptions}
+                    value={userOptions.find((opt) => opt.value === formData.responsible)}
+                    onChange={(selected) => setFormData({ ...formData, responsible: selected?.value || "" })}
+                    placeholder="-- เลือกผู้รับผิดชอบ --"
+                    isClearable
+                    className="w-full text-sm"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor: state.isFocused ? "#3b82f6" : "#d1d5db", // blue-500 ตอน focus
+                        boxShadow: state.isFocused ? "0 0 0 2px #3b82f6" : "none", // เส้นขอบหนาเหมือน input
+                        "&:hover": {
+                          borderColor: state.isFocused ? "#3b82f6" : "#1e40af", // hover สีน้ำเงินเข้ม
+                        },
+                        borderRadius: "0.5rem",
+                        padding: "2px",
+                        transition: "all 0.15s ease", // เพิ่มความนุ่มเวลา focus
+                      }),
+                      option: (base, state) => ({
+                        ...base,
+                        backgroundColor: state.isSelected ? "#1e40af" : state.isFocused ? "#eff6ff" : "white",
+                        color: state.isSelected ? "white" : "#111827",
+                        cursor: "pointer",
+                      }),
+                    }}
+                  />
                 </div>
 
                 {/* คุณสมบัติ */}
@@ -294,7 +332,7 @@ export default function ExtinguisherListPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-400 transition-colors font-medium"
+                  className="px-5 py-2.5 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                 >
                   ยกเลิก
                 </button>
