@@ -94,19 +94,21 @@ export default function ExtinguisherListPage() {
   return (
     <div>
       {/* Header + Add Button */}
-      <div className="flex justify-between items-center my-4">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center my-4 gap-3">
         <h1 className="text-xl text-gray-800 flex items-center gap-2">
           <FireIcon className="h-7 w-7 text-red-600" />
           รายการถังดับเพลิง
         </h1>
 
-        <button
-          onClick={openModal}
-          className="flex items-center gap-2 bg-blue-800 hover:bg-blue-900 text-white px-3 py-2 rounded shadow transition"
-        >
-          <PlusIcon className="h-5 w-5 text-white" />
-          เพิ่มถังดับเพลิง
-        </button>
+        <div className="flex justify-start">
+          <button
+            onClick={openModal}
+            className="flex items-center gap-2 bg-blue-800 hover:bg-blue-900 text-white px-3 py-2 rounded shadow transition text-sm md:text-base"
+          >
+            <PlusIcon className="h-5 w-5 text-white" />
+            เพิ่มถังดับเพลิง
+          </button>
+        </div>
       </div>
 
       {/* ตารางรายการ */}
@@ -144,7 +146,7 @@ export default function ExtinguisherListPage() {
       {/* Modal - Form เพิ่มถังดับเพลิง */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
             {/* Header */}
             <div className="flex justify-between items-center px-6 py-4 bg-blue-800 text-white">
               <div className="flex items-center space-x-3">

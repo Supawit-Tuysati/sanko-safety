@@ -8,25 +8,41 @@ export default function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // 👇 ให้ margin-left ตรงกับ sidebar (w-64 / w-18)
-  const sidebarMargin = isSidebarOpen ? "ml-64" : "ml-[4.5rem]";
+  // 👉 เปลี่ยนจาก margin เป็น padding
+  const sidebarPadding = isSidebarOpen ? "pl-64" : "pl-[4.5rem]";
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen relative overflow-x-hidden">
       <Navbar onToggleSidebar={toggleSidebar} />
 
       <div className="flex pt-[64px]">
         <Sidebar isOpen={isSidebarOpen} />
 
+        {/* CONTENT */}
         <div
-          className={`flex flex-col flex-1 min-h-[calc(100vh-64px)] transition-all duration-300 ${sidebarMargin}`}
+          className={`flex flex-col flex-1 min-h-[calc(100vh-64px)] transition-all duration-300 ${sidebarPadding}`}
         >
-          <main className="flex-1 p-6 bg-gray-50">
-            <Outlet /> {/* แสดง route ย่อย เช่น DashboardPage / ExtinguisherPage */}
+          <main
+            className={`
+              flex-1 p-6 bg-gray-50 transition-all duration-300
+              sm:opacity-100 sm:blur-0
+              ${isSidebarOpen ? "opacity-20 blur-[2px]" : "opacity-100"}
+            `}
+          >
+            <Outlet />
           </main>
+
           <Footer />
         </div>
       </div>
+
+      {/* OVERLAY บังพื้นหลังให้มืดขึ้น (เฉพาะจอเล็ก) */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 sm:hidden z-30 transition-opacity"
+          onClick={toggleSidebar}
+        />
+      )}
     </div>
   );
 }

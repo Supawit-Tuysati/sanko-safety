@@ -18,13 +18,11 @@ export default function Sidebar({ isOpen }) {
     setWidth(isOpen ? "16rem" : "4.5rem");
   }, [isOpen]);
 
-  // 🧭 เมนูหลัก พร้อม path สำหรับ navigation
   const sections = [
     {
       label: "ทั่วไป",
       items: [{ icon: HomeIcon, label: "Dashboard", path: "/" }],
     },
-
     {
       label: "การตรวจเช็ก",
       items: [
@@ -60,9 +58,10 @@ export default function Sidebar({ isOpen }) {
       <ul className="space-y-2 p-4 flex-1 overflow-y-auto">
         {sections.map((section, sIdx) => (
           <div key={sIdx}>
-            {/* Label หมวดหมู่ */}
             {isOpen && (
-              <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">{section.label}</div>
+              <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">
+                {section.label}
+              </div>
             )}
 
             {section.items.map((item, idx) => {

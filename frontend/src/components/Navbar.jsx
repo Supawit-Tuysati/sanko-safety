@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Bars3Icon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ onToggleSidebar }) {
@@ -25,9 +25,10 @@ export default function Navbar({ onToggleSidebar }) {
 
       <button
         onClick={handleLogout}
-        className="text-red-500 hover:text-red-600 font-medium"
+        className="p-2 rounded hover:bg-gray-100 transition"
+        title="Logout"
       >
-        ออกจากระบบ
+        <ArrowRightOnRectangleIcon className="h-6 w-6 text-red-500 hover:text-red-600" />
       </button>
     </nav>
   );
