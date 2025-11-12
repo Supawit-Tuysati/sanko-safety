@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Sidebar({ isOpen }) {
+export default function Sidebar({ isOpen, onClose }) {   // 👈 รับ onClose เข้ามาด้วย
   const [width, setWidth] = useState("16rem");
   const location = useLocation();
 
@@ -47,48 +47,72 @@ export default function Sidebar({ isOpen }) {
   ];
 
   return (
-    <aside
-      className={`fixed top-0 left-0 z-40 bg-white shadow-lg transition-[width] duration-300 ease-in-out
-        h-screen flex flex-col`}
-      style={{ width }}
-    >
-      {/* ช่องว่างด้านบนสำหรับ Navbar */}
-      <div className="h-[64px] flex-shrink-0"></div>
+    <>
+      {/* พื้นหลังมืดตอนเปิดในมือถือ */}
+      {isOpen && (
+        <div
+          onClick={onClose} // 👈 คลิกนอก sidebar จะปิด
+          className={`fixed inset-0 bg-black/40 z-30 sm:hidden transition-opacity duration-300 ${
+            isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
+        />
+      )}
 
-      <ul className="space-y-2 p-4 flex-1 overflow-y-auto">
-        {sections.map((section, sIdx) => (
-          <div key={sIdx}>
-            {isOpen && (
-              <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">
-                {section.label}
-              </div>
-            )}
+      <aside
+        className={`
+          fixed top-0 left-0 z-40 bg-white shadow-lg h-screen flex flex-col
+          transition-all duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          sm:translate-x-0
+        `}
+        style={{ width }}
+      >
+        <div className="h-[64px] flex-shrink-0"></div>
 
-            {section.items.map((item, idx) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+        <ul className="space-y-2 p-4 flex-1 overflow-y-auto">
+          {sections.map((section, sIdx) => (
+            <div key={sIdx}>
+              {isOpen && (
+                <div className="text-xs text-gray-500 font-semibold uppercase mb-1 px-2 pt-2">
+                  {section.label}
+                </div>
+              )}
 
-              return (
-                <Link key={idx} to={item.path}>
-                  <li
-                    className={`flex items-center gap-3 p-2 rounded cursor-pointer transition
-                    ${isActive ? "bg-blue-100 text-blue-700 font-semibold" : "hover:bg-blue-50 text-gray-800"}`}
-                  >
-                    <Icon className={`h-6 w-6 flex-shrink-0 ${isActive ? "text-blue-600" : "text-gray-700"}`} />
-                    <span
-                      className={`whitespace-nowrap transition-all duration-300 ${
-                        isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+              {section.items.map((item, idx) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+
+                return (
+                  <Link key={idx} to={item.path} onClick={onClose}> {/* 👈 ปิด sidebar ตอนกดลิงก์ด้วย */}
+                    <li
+                      className={`flex items-center gap-3 p-2 rounded cursor-pointer transition
+                      ${
+                        isActive
+                          ? "bg-blue-100 text-blue-700 font-semibold"
+                          : "hover:bg-blue-50 text-gray-800"
                       }`}
                     >
-                      {item.label}
-                    </span>
-                  </li>
-                </Link>
-              );
-            })}
-          </div>
-        ))}
-      </ul>
-    </aside>
+                      <Icon
+                        className={`h-6 w-6 flex-shrink-0 ${
+                          isActive ? "text-blue-600" : "text-gray-700"
+                        }`}
+                      />
+                      <span
+                        className={`whitespace-nowrap transition-all duration-300 ${
+                          isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    </li>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+        </ul>
+      </aside>
+    </>
   );
 }
+
